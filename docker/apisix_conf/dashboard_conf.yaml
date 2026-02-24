@@ -1,0 +1,7 @@
+conf:
+  etcd:
+    endpoints:
+      - http://etcd:2379
+    prefix: /apisix
+    user: ""
+    password: ""

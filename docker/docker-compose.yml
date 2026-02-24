@@ -21,6 +21,54 @@ services:
     volumes:
       - sports-center-redis-data:/data
 
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.5.0
+    environment:
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ALLOW_NONE_AUTHENTICATION=yes
+    ports:
+      - "2379:2379"
+    networks:
+      - apisix-net
+
+  apisix:
+    image: apache/apisix:latest
+    restart: always
+    volumes:
+      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
+    depends_on:
+      - etcd
+    ports:
+      - "9080:9080"
+      - "9180:9180"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - apisix-net
+
+  apisix-dashboard:
+    image: apache/apisix-dashboard:latest
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./apisix_conf/dashboard_conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    environment:
+      - APISIX_ADMIN_KEY=${MY_ADMIN_KEY}
+      - APISIX_ADMIN_API_URL=http://apisix:9180/apisix/admin
+      - APISIX_DASHBOARD_ETCD_ENDPOINTS=http://etcd:2379
+    depends_on:
+      - etcd
+      - apisix
+    networks:
+      - apisix-net
+
+
+networks:
+  apisix-net:
+    driver: bridge
+
 volumes:
   sports-center-redis-data:
   sports-center-mysql-data:

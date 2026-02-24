@@ -6,7 +6,7 @@ This project is a full-stack e-commerce application built with **Spring Boot 3.2
 The primary objective of this repository is to demonstrate the evolution from a **Monolithic** architecture to a **Distributed Microservices** architecture, following a production-grade roadmap.
 
 ## 🚀 Roadmap
-- [x] **Phase 1: Monolithic Baseline** (Current)
+- [x] **Phase 1: Monolithic Baseline** 
     - Establish a stable monolithic functional baseline (based on Module 15).
     - Containerize infrastructure (MySQL) using Docker Compose.
 - [ ] **Phase 2: API Gateway & Traffic Governance**
